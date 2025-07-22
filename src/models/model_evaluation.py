@@ -5,6 +5,7 @@ import pandas as pd
 import pickle   
 import json
 
+
 model  = pickle.load(open("models/random_forest_model.pkl", "rb"))
 test_data = pd.read_csv("data/interim/test_bow.csv")
 X_test = test_data.drop(columns=['label']).values

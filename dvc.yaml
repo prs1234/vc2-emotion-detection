@@ -16,26 +16,26 @@ stages:
     - data\processed\test.csv
     - data\processed\train.csv
   feature_engineering:
-    cmd: python src\data\features.py
+    cmd: python src\features\features.py
     deps:
     - data\processed\test.csv
     - data\processed\train.csv
-    - src\data\features.py
+    - src\features\features.py
     outs:
     - data\interim\test_bow.csv
     - data\interim\train_bow.csv
   model_training:
-    cmd: python src\data\modelling.py
+    cmd: python src\models\modelling.py
     deps:
     - data\interim\train_bow.csv
-    - src\data\modelling.py
+    - src\models\modelling.py
     outs:
     - models\random_forest_model.pkl
   model_evaluation:
-    cmd: python src\data\model_evaluation.py
+    cmd: python src\models\model_evaluation.py
     deps:
     - data\interim\test_bow.csv
     - models\random_forest_model.pkl
-    - src\data\model_evaluation.py
+    - src\models\model_evaluation.py
     outs:
     - reports\metrics.json
