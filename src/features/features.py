@@ -4,7 +4,7 @@ import os
 import yaml
 import logging
 from typing import Tuple
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 os.makedirs("logs", exist_ok=True)  # Ensure logs directory exists
 
@@ -42,20 +42,20 @@ def extract_features_and_labels(df: pd.DataFrame) -> Tuple[np.ndarray, np.ndarra
         logging.error(f"Error extracting features and labels: {e}")
         raise
 
-def vectorize_data(X_train: np.ndarray, X_test: np.ndarray, max_features: int) -> Tuple[np.ndarray, np.ndarray, CountVectorizer]:
+def vectorize_data(X_train: np.ndarray, X_test: np.ndarray, max_features: int) -> Tuple[np.ndarray, np.ndarray, TfidfVectorizer]:
     try:
-        vectorizer = CountVectorizer(max_features=max_features)
-        X_train_bow = vectorizer.fit_transform(X_train)
-        X_test_bow = vectorizer.transform(X_test)
-        logging.info("Data vectorization completed")
-        return X_train_bow, X_test_bow, vectorizer
+        vectorizer = TfidfVectorizer(max_features=max_features)
+        X_train_tfidf = vectorizer.fit_transform(X_train)
+        X_test_tfidf = vectorizer.transform(X_test)
+        logging.info("TF-IDF vectorization completed")
+        return X_train_tfidf, X_test_tfidf, vectorizer
     except Exception as e:
         logging.error(f"Error vectorizing data: {e}")
         raise
 
-def save_features(X_bow, y, filepath: str) -> None:
+def save_features(X_tfidf, y, filepath: str) -> None:
     try:
-        df = pd.DataFrame(X_bow.toarray())
+        df = pd.DataFrame(X_tfidf.toarray())
         df['label'] = y
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
         df.to_csv(filepath, index=False)
@@ -71,9 +71,9 @@ def main() -> None:
     test_data = load_data("data/processed/test.csv")
     X_train, y_train = extract_features_and_labels(train_data)
     X_test, y_test = extract_features_and_labels(test_data)
-    X_train_bow, X_test_bow, _ = vectorize_data(X_train, X_test, max_features)
-    save_features(X_train_bow, y_train, "data/interim/train_bow.csv")
-    save_features(X_test_bow, y_test, "data/interim/test_bow.csv")
+    X_train_tfidf, X_test_tfidf, _ = vectorize_data(X_train, X_test, max_features)
+    save_features(X_train_tfidf, y_train, "data/interim/train_tfidf.csv")
+    save_features(X_test_tfidf, y_test, "data/interim/test_tfidf.csv")
 
 if __name__ == "__main__":
     main()

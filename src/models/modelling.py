@@ -65,7 +65,8 @@ def main() -> None:
     params = load_params("params.yaml")
     n_estimators = params['modelling']['n_estimators']
     max_depth = params['modelling']['max_depth']
-    train_data = load_train_data("data/interim/train_bow.csv")
+    # Use TF-IDF features instead of BOW
+    train_data = load_train_data("data/interim/train_tfidf.csv")
     x_train, y_train = get_features_and_labels(train_data)
     model = train_model(x_train, y_train, n_estimators, max_depth)
     save_model(model, "models/random_forest_model.pkl")

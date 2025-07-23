@@ -58,7 +58,8 @@ def save_metrics(metrics: Dict[str, float], filepath: str) -> None:
 
 def main() -> None:
     model = load_model("models/random_forest_model.pkl")
-    test_data = load_test_data("data/interim/test_bow.csv")
+    # Use TF-IDF features instead of BOW
+    test_data = load_test_data("data/interim/test_tfidf.csv")
     X_test = test_data.drop(columns=['label']).values
     y_test = test_data['label'].values
     metrics_dict = evaluate_model(model, X_test, y_test)
